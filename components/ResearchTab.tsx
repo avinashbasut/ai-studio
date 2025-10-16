@@ -10,7 +10,11 @@ interface Document {
     size: string;
 }
 
-const ResearchTab: React.FC = () => {
+interface ResearchTabProps {
+  addNotification: (message: string, type?: 'success' | 'error' | 'info') => void;
+}
+
+const ResearchTab: React.FC<ResearchTabProps> = ({ addNotification }) => {
     const [documents, setDocuments] = useState<Document[]>([
         { name: 'Location_Scouting_Notes.pdf', type: 'PDF', size: '2.3 MB' },
         { name: 'Character_Bios_Final.docx', type: 'DOCX', size: '87 KB' },
@@ -35,9 +39,9 @@ const ResearchTab: React.FC = () => {
                 size: `${(file.size / 1024 / 1024).toFixed(2)} MB`,
             };
             setDocuments(prev => [newDoc, ...prev]);
+            addNotification(`Uploaded "${newDoc.name}" successfully.`, 'success');
             handleSummarize(newDoc);
             
-            // Reset file input
             if(fileInputRef.current) {
                 fileInputRef.current.value = "";
             }
@@ -53,6 +57,7 @@ const ResearchTab: React.FC = () => {
         setTimeout(() => {
             setSummary(`This document, "${doc.name}", appears to be a critical piece of research for the project. It details potential filming locations with notes on lighting, accessibility, and atmospheric quality. Key themes include urban decay and natural reclamation, suggesting a post-apocalyptic or dystopian setting. The document also cross-references character biographies, indicating a strong link between environment and character development.`);
             setIsSummarizing(false);
+            addNotification(`AI summary for "${doc.name}" is ready.`, 'info');
         }, 2500);
     };
 

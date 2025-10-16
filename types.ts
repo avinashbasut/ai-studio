@@ -1,12 +1,4 @@
-export enum Tab {
-  Dashboard = 'Dashboard',
-  Research = 'Research',
-  Transcripts = 'Transcripts',
-  Scripts = 'Scripts',
-  Storyboards = 'Storyboards',
-  Templates = 'Templates',
-  Settings = 'Settings',
-}
+// FIX: Populating types.ts with necessary type definitions.
 
 export interface User {
   id: number;
@@ -16,12 +8,14 @@ export interface User {
   avatarInitial: string;
 }
 
-export interface Notification {
-  id: number;
-  type: string;
-  message: string;
-  time: string;
-  read: boolean;
+export enum Tab {
+  Dashboard = 'dashboard',
+  Research = 'research',
+  Transcripts = 'transcripts',
+  Scripts = 'scripts',
+  Storyboards = 'storyboards',
+  Templates = 'templates',
+  Settings = 'settings',
 }
 
 export interface TranscriptSegment {
@@ -35,4 +29,24 @@ export interface StoryboardCard {
   notes: string;
   imageUrl: string | null;
   isLoading: boolean;
+}
+
+export interface Project {
+  id: number;
+  title: string;
+  description: string;
+  members: number;
+  lastUpdated: string;
+}
+
+export interface Notification {
+  id: number;
+  message: string;
+  type: 'success' | 'error' | 'info';
+}
+
+export interface Activity {
+  id: number;
+  text: string;
+  timestamp: string;
 }

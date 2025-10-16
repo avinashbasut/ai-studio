@@ -7,6 +7,9 @@ import { Loader } from './common/Loader';
 import { Icon } from './common/Icon';
 import { Card } from './common/Card';
 
+interface StoryboardsTabProps {
+  addNotification: (message: string, type?: 'success' | 'error' | 'info') => void;
+}
 
 const StoryboardCard: React.FC<{
   card: StoryboardCardType;
@@ -76,7 +79,7 @@ const StoryboardCard: React.FC<{
 };
 
 
-const StoryboardsTab: React.FC = () => {
+const StoryboardsTab: React.FC<StoryboardsTabProps> = ({ addNotification }) => {
   const [cards, setCards] = useState<StoryboardCardType[]>(
     Array.from({ length: INITIAL_STORYBOARD_CARDS }, (_, i) => ({
       id: i + 1,
@@ -100,9 +103,10 @@ const StoryboardsTab: React.FC = () => {
     try {
       const imageUrl = await generateStoryboardImage(prompt);
       updateCard(id, { imageUrl });
+      addNotification(`Storyboard image for "${prompt}" generated!`, 'success');
     } catch (error) {
       console.error("Failed to generate image for card", id, error);
-      // You could add an error state to the card here
+      addNotification('Failed to generate storyboard image.', 'error');
     } finally {
       updateCard(id, { isLoading: false });
     }

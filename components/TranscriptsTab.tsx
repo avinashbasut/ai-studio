@@ -6,7 +6,11 @@ import { Button } from './common/Button';
 import { Loader } from './common/Loader';
 import { Icon } from './common/Icon';
 
-const TranscriptsTab: React.FC = () => {
+interface TranscriptsTabProps {
+  addNotification: (message: string, type?: 'success' | 'error' | 'info') => void;
+}
+
+const TranscriptsTab: React.FC<TranscriptsTabProps> = ({ addNotification }) => {
   const [audioText, setAudioText] = useState('');
   const [transcript, setTranscript] = useState<TranscriptSegment[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -23,8 +27,10 @@ const TranscriptsTab: React.FC = () => {
     try {
       const result = await generateTranscription(audioText);
       setTranscript(result);
+      addNotification('Transcription successfully generated!', 'success');
     } catch (err) {
       setError('An error occurred during transcription. Please try again.');
+      addNotification('Transcription failed.', 'error');
       console.error(err);
     } finally {
       setIsLoading(false);

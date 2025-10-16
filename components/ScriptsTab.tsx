@@ -8,7 +8,11 @@ import { Icon } from './common/Icon';
 
 type SuggestionType = 'dialogue' | 'flow' | 'consistency';
 
-const ScriptsTab: React.FC = () => {
+interface ScriptsTabProps {
+  addNotification: (message: string, type?: 'success' | 'error' | 'info') => void;
+}
+
+const ScriptsTab: React.FC<ScriptsTabProps> = ({ addNotification }) => {
   const [script, setScript] = useState('');
   const [suggestion, setSuggestion] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -30,8 +34,8 @@ const ScriptsTab: React.FC = () => {
 
   const handleScriptChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const newContent = e.target.value;
-    setScript(newContent); // Update local state immediately for responsiveness
-    realtimeService.updateScript(newContent); // Broadcast change to others
+    setScript(newContent);
+    realtimeService.updateScript(newContent);
   };
 
   const handleSuggestion = async (type: SuggestionType) => {
@@ -46,8 +50,10 @@ const ScriptsTab: React.FC = () => {
     try {
       const result = await getScriptSuggestion(script, type);
       setSuggestion(result);
+      addNotification(`AI suggestion for '${type}' is ready.`, 'success');
     } catch (err) {
       setError('An error occurred while getting suggestions. Please try again.');
+      addNotification('Failed to get AI suggestion.', 'error');
       console.error(err);
     } finally {
       setIsLoading(false);
